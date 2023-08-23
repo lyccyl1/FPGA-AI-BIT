@@ -11,8 +11,8 @@ from torchvision.transforms import ToTensor
 if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     batch_size = 256
-    train_dataset = mnist.MNIST(root='./train', train=True, transform=ToTensor())
-    test_dataset = mnist.MNIST(root='./test', train=False, transform=ToTensor())
+    train_dataset = mnist.MNIST(root='./train', train=True, transform=ToTensor(), download=True)
+    test_dataset = mnist.MNIST(root='./test', train=False, transform=ToTensor(), download=True)
     train_loader = DataLoader(train_dataset, batch_size=batch_size)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     model = Model().to(device)
