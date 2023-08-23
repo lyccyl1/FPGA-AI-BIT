@@ -1,2 +1,5 @@
 LeNet/models/*
 LeNet/parameters/*
+LeNet/__pycache__/*
+LeNet/train/*
+LeNet/test/*
