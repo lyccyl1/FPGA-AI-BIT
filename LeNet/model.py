@@ -1,6 +1,6 @@
 from torch.nn import Module
 from torch import nn
-
+import torch
 
 class Model(Module):
     def __init__(self):
@@ -106,3 +106,40 @@ class CNNModel(nn.Module):
         out = self.fc2(out)
 
         return out
+    
+    
+class quanModel(Module):
+    def __init__(self):
+        super(quanModel, self).__init__()
+        self.quant = torch.quantization.QuantStub()
+        self.dequant = torch.quantization.DeQuantStub()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.relu1 = nn.ReLU()
+        self.pool1 = nn.MaxPool2d(2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.relu2 = nn.ReLU()
+        self.pool2 = nn.MaxPool2d(2)
+        self.fc1 = nn.Linear(256, 120)
+        self.relu3 = nn.ReLU()
+        self.fc2 = nn.Linear(120, 84)
+        self.relu4 = nn.ReLU()
+        self.fc3 = nn.Linear(84, 10)
+        self.relu5 = nn.Sigmoid()
+
+    def forward(self, x):
+        x = self.quant(x)
+        y = self.conv1(x)
+        y = self.relu1(y)
+        y = self.pool1(y)
+        y = self.conv2(y)
+        y = self.relu2(y)
+        y = self.pool2(y)
+        y = y.view(y.shape[0], -1)
+        y = self.fc1(y)
+        y = self.relu3(y)
+        y = self.fc2(y)
+        y = self.relu4(y)
+        y = self.fc3(y)
+        y = self.relu5(y)
+        y = self.dequant(y)
+        return y

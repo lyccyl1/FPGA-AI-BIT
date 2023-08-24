@@ -1,4 +1,4 @@
-from model import Model
+from model import Model, quanModel
 import numpy as np
 import os
 import torch
@@ -11,11 +11,11 @@ from torchvision.transforms import ToTensor
 if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     batch_size = 256
-    train_dataset = mnist.MNIST(root='./train', train=True, transform=ToTensor(), download=True)
-    test_dataset = mnist.MNIST(root='./test', train=False, transform=ToTensor(), download=True)
+    train_dataset = mnist.MNIST(root='./data', train=True, transform=ToTensor(), download=True)
+    test_dataset = mnist.MNIST(root='./data', train=False, transform=ToTensor(), download=True)
     train_loader = DataLoader(train_dataset, batch_size=batch_size)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
-    model = Model().to(device)
+    model = quanModel().to(device)
     sgd = SGD(model.parameters(), lr=1e-1)
     loss_fn = CrossEntropyLoss()
     all_epoch = 100
@@ -47,7 +47,9 @@ if __name__ == '__main__':
         print('accuracy: {:.3f}'.format(acc), flush=True)
         if not os.path.isdir("models"):
             os.mkdir("models")
-        torch.save(model, 'models/mnist_{:.3f}.pkl'.format(acc))
+        
+        model_quan = torch.quantization.convert(model)
+        torch.save(model_quan, 'models/mnist_quan{:.3f}.pth'.format(acc))
         if np.abs(acc - prev_acc) < 1e-4:
             break
         prev_acc = acc
