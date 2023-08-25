@@ -47,9 +47,9 @@ if __name__ == '__main__':
         print('accuracy: {:.3f}'.format(acc), flush=True)
         if not os.path.isdir("models"):
             os.mkdir("models")
-        torch.save(model, 'models/mnist{:.3f}.pth'.format(acc))
+        torch.save(model.state_dict(), 'models/mnist_{:.3f}.pth'.format(acc))
         model_quan = torch.quantization.convert(model)
-        torch.save(model_quan, 'models/mnist_quan{:.3f}.pth'.format(acc))
+        torch.save(model_quan.state_dict(), 'models/mnist_quan_{:.3f}.pth'.format(acc))
         if np.abs(acc - prev_acc) < 1e-4:
             break
         prev_acc = acc
