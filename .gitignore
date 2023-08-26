@@ -4,3 +4,5 @@ LeNet/__pycache__/*
 LeNet/train/*
 LeNet/test/*
 LeNet/data/*
+ResNet/cifar-10-python/*
+ResNet/models/*
