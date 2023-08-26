@@ -47,31 +47,30 @@ def train(model, data_loader, loss_func):
         loss.backward()
         optimizer.step()
 
-model = resnet152()
-model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+model = resnet152(pretrained=True)
 model.fc = nn.Linear(2048, 10)
 model.to(device)
 
-transform_model = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Normalize((0.449), (0.226)),
-    ])
 
+transform_train = transforms.Compose([
+    transforms.RandomCrop(32, padding=4), #padding后随机裁剪
+    transforms.RandomHorizontalFlip(0.5),
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+])
+ 
 transform_test = transforms.Compose([
-        transforms.Grayscale(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.4734), (0.2507))
-    ])
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+])
 
 torch.manual_seed(0)
 g = torch.Generator()
-train_dataloader = DataLoader(CIFAR10(root='./cifar-10-python/', train=True, transform=transform_model, download=True),
+train_dataloader = DataLoader(CIFAR10(root='./cifar-10-python/', train=True, transform=transform_train),
                                         shuffle=True, generator=g, batch_size=32, num_workers=4)
 test_dataloader = DataLoader(CIFAR10(root='./cifar-10-python/', train=False, transform=transform_test),
                             batch_size=32, num_workers=4)
-optimizer = Adam(model.parameters(), lr=1e-4)
+optimizer = Adam(model.parameters(), lr=1e-3)
 loss_func = nn.CrossEntropyLoss()
 
 max_test_acc = 0.
