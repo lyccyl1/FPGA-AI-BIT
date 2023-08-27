@@ -20,7 +20,9 @@ We set ai model to construct a AI classify model on FPGA.
 ## List of contributors
 
 * [Eason Leo](https://github.com/lyccyl1)
-* 
+* https://github.com/Programming-D
+* https://github.com/Z-Luan
+* https://github.com/wu-han-lin
 
 ## License
 
