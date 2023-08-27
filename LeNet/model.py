@@ -34,6 +34,43 @@ class Model(Module):
         y = self.relu5(y)
         return y
     
+class Lenet5(nn.Module):
+    def __init__(self):
+        super(Lenet5, self).__init__()
+        # 32, 32, 1
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(1, 6, kernel_size=5, stride=1, padding=0),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        )
+        # 14, 14, 6
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(6, 16, kernel_size=5, stride=1, padding=0),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        )
+        # 5, 5, 16
+        self.fc1 = nn.Sequential(
+            nn.Linear(400, 120),
+            nn.ReLU(),
+            nn.Dropout(0.2)
+        )
+        self.fc2 = nn.Sequential(
+            nn.Linear(120, 84),
+            nn.ReLU(),
+            nn.Dropout(0.2)
+        )
+        self.classifier = nn.Linear(84, 10)
+
+    def forward(self, input):
+        x = self.layer1(input)
+        x = self.layer2(x)
+        x = self.fc1(x.view(x.shape[0], -1))
+        x = self.fc2(x)
+        logits = self.classifier(x)
+
+        return logits
+    
     
 class CNNModel(nn.Module):
     def __init__(self):

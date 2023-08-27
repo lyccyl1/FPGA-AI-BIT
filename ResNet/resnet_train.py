@@ -47,22 +47,26 @@ def train(model, data_loader, loss_func):
         loss.backward()
         optimizer.step()
 
-model = resnet152(pretrained=True)
+model = resnet152()
+model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
 model.fc = nn.Linear(2048, 10)
 model.to(device)
 
 
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4), #padding后随机裁剪
+    transforms.Grayscale(),
     transforms.RandomHorizontalFlip(0.5),
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    transforms.Normalize((0.4734), (0.2507)),
 ])
  
 transform_test = transforms.Compose([
+    transforms.Grayscale(),
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    transforms.Normalize((0.4734), (0.2507)),
 ])
+
 
 torch.manual_seed(0)
 g = torch.Generator()
