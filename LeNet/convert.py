@@ -134,6 +134,13 @@ def float2IEEE32(x):
         y1 += hex(int(y[4*i:4*(i+1)], 2)).replace("0x", "")
     return y1
 
+def floatto18f(x):
+    '''
+    float转IEEE754的单精度浮点数
+    '''
+    y1 = "{:.18f}".format(x)
+    return y1
+
 
 if __name__ == '__main__':
     from model import Model
@@ -154,7 +161,7 @@ if __name__ == '__main__':
                     for j in range(s2):
                         for k in range(s3):
                             for t in range(s4):
-                                f.write(float2IEEE16(Tensor[i][j][k][t]))
+                                f.write(floatto18f(Tensor[i][j][k][t])+'\n')
                     f.write("\n")
         # 全连接层权重量化
         if name in ["fc1.weight", "fc2.weight", "fc3.weight"]:
@@ -163,4 +170,4 @@ if __name__ == '__main__':
             with open("parameters/"+fname+".txt", "w", encoding="utf-8") as f:
                 for i in range(Matrix.shape[0]):
                     for j in range(Matrix.shape[1]):
-                        f.write(float2IEEE32(Matrix[i][j])+"\n")
+                        f.write(floatto18f(Matrix[i][j])+"\n")
