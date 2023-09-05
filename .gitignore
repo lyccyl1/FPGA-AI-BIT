@@ -6,3 +6,4 @@ LeNet/test/*
 LeNet/data/*
 ResNet/cifar-10-python/*
 ResNet/models/*
+ResNet/best_models/*
